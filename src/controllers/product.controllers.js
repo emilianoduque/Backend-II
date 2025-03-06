@@ -41,7 +41,7 @@ export const createProduct = async (req, res) => {
     try {
         const { title, description, category, code, price, stock } = req.body;
         if(!title || !description || !category || !code || !price || !stock){
-            return res.status(400),send({message: "Faltan datos requeridos"});
+            return res.status(400).send({message: "Faltan datos requeridos"});
         }
         const newProduct = await productModel.create({
             title, description, category, code, price, stock

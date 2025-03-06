@@ -9,6 +9,6 @@ productRouter.get("/", passport.authenticate("jwt"), getProducts);
 productRouter.get("/:pid", passport.authenticate("jwt"), getProduct);
 productRouter.post("/", passport.authenticate("jwt"), authorization("Admin"), createProduct);
 productRouter.put("/:pid", passport.authenticate("jwt"), authorization("Admin"), updateProduct);
-productRouter.put("/:pid", passport.authenticate("jwt"), authorization("Admin"), deleteProduct);
+productRouter.delete("/:pid", passport.authenticate("jwt"), authorization("Admin"), deleteProduct);
 
 export default productRouter;
