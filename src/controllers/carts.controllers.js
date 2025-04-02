@@ -1,4 +1,5 @@
 import cartModel from "../models/carts.models.js";
+import productModel from "../models/products.models.js";
 
 export const getCart = async(req,res) => {
     try {
@@ -84,5 +85,60 @@ export const deleteCart = async(req,res) => {
         }
     } catch (error) {
         res.status(500).send(error);
+    }
+}
+
+export const checkout = async(req,res) => {
+    try {
+        const cartId = req.params.cid;
+        const cart = await cartModel.findById(cartId);
+        const prodSinStock = [];
+
+        if(cart){
+            for(const prod of cart.products){
+                let product = await productModel.findById(prod.id_prod)
+                if(product.stock - prod.quantity < 0){
+                    prodSinStock.push(product.id);
+                }
+            }
+
+            if(prodSinStock.length === 0){
+                let totalAmount = 0;
+
+                for(const prod of cart.products){
+                    const product = await productModel.findById(prod.id_prod);
+                    if(product){
+                        product.stock -= prod.quantity;
+                        totalAmount += product.price * prod.quantity;
+                        await product.save();
+                    }
+                }
+
+                const newTicket = await ticketModel.create({
+                    code: crypto.randomUUID(),
+                    amount: totalAmount,
+                    purcharser: req.user.email,
+                    products: cart.products
+                })
+
+                await cartModel.findByIdAndUpdate(cartId, {products: []});
+                res.status(200).send(newTicket);
+            } else {
+                //Saco los productos sin stock del carrito
+                prodSinStock.forEach((prodId) => {
+                    let indice = cart.products.findIndex(prod => prod.id == prodId)
+                    cart.products.splice(indice, 1);
+                })
+
+                await cartModel.findByIdAndUpdate(cartId, {
+                    products: cart.products
+                })
+                res.status(400).send(prodSinStock);
+            }
+        } else {
+            res.status(404).send({message: "Carrito no existe"})
+        }
+    } catch (error) {
+        res.status(500).send({message: error});
     }
 }

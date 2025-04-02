@@ -34,3 +34,18 @@ export const register = async(req,res) => {
     }
 }
 
+export const viewRegister = (req,res) => {
+    res.status(200).render("templates/register", {
+        title: "Registro de usuarios",
+        url_js: "/js/register.js",
+        url_css: "/css/main.css"
+    })
+}
+
+export const viewLogin = (req,res) => {
+    res.status(200).render("templates/login", {
+        title: "Inicio de sesion de usuarios",
+        url_js: "/js/login.js",
+        url_css: "/css/main.css"
+    })
+}
