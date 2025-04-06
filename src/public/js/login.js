@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault()
             const formData = new FormData(formLogin)
             const userData = Object.fromEntries(formData)
-            const response = await fetch("http://localhost:8080/api/session/login", {
+            const response = await fetch(`http://localhost:8080/api/sessions/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     onClick: function(){} //callback after click
                 }).showToast();
                 setTimeout(() => {
-                    window.location.href = "http://localhost:8080/api/products"
+                    window.location.href = `http://localhost:8080/api/products`
                 }, 3000);
             } else {
                 console.log(data);

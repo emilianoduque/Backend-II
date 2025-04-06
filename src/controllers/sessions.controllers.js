@@ -1,4 +1,5 @@
 import {generateToken} from "../utils/jwt.js";
+import "dotenv/config";
 
 export const login = async(req,res) => {
     try {
@@ -13,7 +14,7 @@ export const login = async(req,res) => {
         }
 
         //retornando token de JWT
-        return res.status(200).cookie("coderSession", generateToken(req.user), {
+        return res.status(200).cookie(process.env.SECRET_SESSION, generateToken(req.user), {
             httpOnly: true,
             secure: false,
             maxAge: 86400000
@@ -38,7 +39,6 @@ export const viewRegister = (req,res) => {
     res.status(200).render("templates/register", {
         title: "Registro de usuarios",
         url_js: "/js/register.js",
-        url_css: "/css/main.css"
     })
 }
 
@@ -46,6 +46,5 @@ export const viewLogin = (req,res) => {
     res.status(200).render("templates/login", {
         title: "Inicio de sesion de usuarios",
         url_js: "/js/login.js",
-        url_css: "/css/main.css"
     })
 }
